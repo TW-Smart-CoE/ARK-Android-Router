@@ -1,4 +1,4 @@
-package zlc.season.router.plugin
+package com.thoughtworks.ark.router.plugin
 
 import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
@@ -47,7 +47,7 @@ abstract class ModuleClassVisitorFactory : AsmClassVisitorFactory<ModuleClassVis
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        if (classData.interfaces.contains("zlc.season.butterfly.module.Module")) {
+        if (classData.interfaces.contains("com.thoughtworks.ark.router.module.Module")) {
             ModuleHolder.addModule(classData.className)
         }
 
@@ -78,14 +78,14 @@ class ModuleMethodVisitor(methodVisitor: MethodVisitor) : MethodVisitor(ASM7, me
         ModuleHolder.forEach {
             mv.visitFieldInsn(
                 GETSTATIC,
-                "zlc/season/router/ButterflyCore",
+                "com/thoughtworks/ark/router/RouterCore",
                 "INSTANCE",
-                "Lzlc/season/butterfly/ButterflyCore;"
+                "Lcom/thoughtworks/ark/router/RouterCore;"
             )
             mv.visitLdcInsn(it)
             mv.visitMethodInsn(
                 INVOKEVIRTUAL,
-                "zlc/season/router/ButterflyCore",
+                "com/thoughtworks/ark/router/RouterCore",
                 "addModuleName",
                 "(Ljava/lang/String;)V",
                 false

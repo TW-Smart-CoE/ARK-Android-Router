@@ -22,7 +22,7 @@ gradlePlugin {
             id = "io.github.thoughtworks.ark.router"
             displayName = "Router plugin"
             description = "Router plugin"
-            implementationClass = "zlc.season.butterfly.plugin.ButterflyPlugin"
+            implementationClass = "com.thoughtworks.ark.router.plugin.RouterPlugin"
         }
     }
 }

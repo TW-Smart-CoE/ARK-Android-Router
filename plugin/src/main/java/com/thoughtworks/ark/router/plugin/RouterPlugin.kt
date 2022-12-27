@@ -1,4 +1,4 @@
-package zlc.season.router.plugin
+package com.thoughtworks.ark.router.plugin
 
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
@@ -10,13 +10,17 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 
-class ButterflyPlugin : Plugin<Project> {
+class RouterPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.pluginManager.withPlugin("com.android.application") {
             val androidComponentsExtension = project.extensions.getByType(AndroidComponentsExtension::class.java)
             androidComponentsExtension.onVariants { variant ->
 
-                val task = project.tasks.register("clean${variant.name.capitalize()}ButterflyModule", CleanModuleMapTask::class.java) {}
+                val task = project.tasks.register(
+                    "clean${variant.name.capitalize()}RouterModule",
+                    CleanModuleMapTask::class.java
+                ) {}
+
                 val cleanTask = project.tasks.named("clean")
                 cleanTask.dependsOn(task)
 
