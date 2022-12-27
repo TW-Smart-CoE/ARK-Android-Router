@@ -16,5 +16,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ARK-Android-Router"
-// Main App Module
+
 include(":app")
+
+include(":annotation")
+include(":compiler")
+include(":router")
+include(":plugin")
