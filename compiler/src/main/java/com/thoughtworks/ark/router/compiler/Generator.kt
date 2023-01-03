@@ -1,7 +1,14 @@
 package com.thoughtworks.ark.router.compiler
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.typeNameOf
 import com.thoughtworks.ark.router.annotation.ServiceData
 import com.thoughtworks.ark.router.module.Module
 
@@ -24,7 +31,7 @@ internal class Generator(
             .addFunction(
                 FunSpec.builder("doNothing")
                     .returns(moduleClass)
-                    .addStatement("return ${className}()")
+                    .addStatement("return $className()")
                     .build()
             )
             .build()
@@ -86,7 +93,7 @@ internal class Generator(
     private fun generateSchemeMapBlock(): CodeBlock {
         val builder = CodeBlock.Builder()
         schemeMap.forEach { (k, v) ->
-            builder.addStatement("""schemeMap["$k"] = ${v}::class.java """)
+            builder.addStatement("""schemeMap["$k"] = $v::class.java """)
         }
         return builder.build()
     }
@@ -94,7 +101,7 @@ internal class Generator(
     private fun generateServiceMapBlock(): CodeBlock {
         val builder = CodeBlock.Builder()
         serviceMap.forEach { (k, v) ->
-            builder.addStatement("""serviceMap["$k"] = ${v}::class.java """)
+            builder.addStatement("""serviceMap["$k"] = $v::class.java """)
         }
         return builder.build()
     }
@@ -102,7 +109,9 @@ internal class Generator(
     private fun generateServiceImplMapBlock(): CodeBlock {
         val builder = CodeBlock.Builder()
         serviceImplMap.forEach { (k, v) ->
-            builder.addStatement("""serviceImplMap["$k"] = ServiceData(cls=${(v.className)}::class.java, singleton=${v.singleton}) """)
+            builder.addStatement(
+                """serviceImplMap["$k"] = ServiceData(cls=${(v.className)}::class.java, singleton=${v.singleton}) """
+            )
         }
         return builder.build()
     }

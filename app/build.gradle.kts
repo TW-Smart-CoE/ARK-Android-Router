@@ -1,19 +1,31 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.library)
+    alias(libs.plugins.application)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kapt)
     alias(libs.plugins.detekt)
-    id("maven-publish")
 }
 
 android {
     setCompileSdkVersion(libs.versions.sdk.compile.version.get().toInt())
 
     defaultConfig {
+        applicationId = "com.thoughtworks.ark.router.demo"
+
         minSdk = libs.versions.sdk.min.version.get().toInt()
         targetSdk = libs.versions.sdk.target.version.get().toInt()
-        vectorDrawables { useSupportLibrary = true }
+
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
     }
 
     compileOptions {
@@ -25,41 +37,29 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    packagingOptions {
-        resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-        }
-    }
-
     buildFeatures {
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.asProvider().get()
     }
+
+    packagingOptions {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
 }
 
 dependencies {
-    api(project(":annotation"))
-    api(libs.clarity)
-    api(libs.kotlin.coroutines)
-    api(libs.lifecycle.runtime.ktx)
-    api(libs.fragment)
-    api(libs.core.ktx)
-    api(libs.compose.ui)
-    api(libs.compose.runtime)
+    implementation(libs.bundles.kotlin)
+    implementation(libs.bundles.android)
+    implementation(libs.bundles.compose)
+
+    implementation(project(":router"))
+    kapt(project(":compiler"))
 
     testImplementation(libs.junit4)
 
     detektPlugins(libs.detekt.formatting)
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                from(components["release"])
-            }
-        }
-    }
 }

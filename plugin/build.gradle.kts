@@ -13,13 +13,17 @@ dependencies {
     implementation("com.android.tools.build:gradle-api:7.0.4")
 }
 
-group = "io.github.thoughtworks.ark"
+group = "com.thoughtworks.ark.router"
 version = "1.0.0"
+
+tasks.withType(Copy::class.java).all {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 gradlePlugin {
     plugins {
         create("routerPlugin") {
-            id = "io.github.thoughtworks.ark.router"
+            id = "com.thoughtworks.ark.router"
             displayName = "Router plugin"
             description = "Router plugin"
             implementationClass = "com.thoughtworks.ark.router.plugin.RouterPlugin"
@@ -30,8 +34,8 @@ gradlePlugin {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "io.github.thoughtworks.ark"
-            artifactId = "io.github.thoughtworks.ark.router"
+            groupId = "com.thoughtworks.ark.router"
+            artifactId = "com.thoughtworks.ark.router"
             version = "1.0.0"
 
             from(components["java"])

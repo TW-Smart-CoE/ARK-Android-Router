@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kapt)
+    alias(libs.plugins.detekt)
     id("maven-publish")
 }
 
@@ -13,6 +14,8 @@ dependencies {
 
     implementation(libs.auto.service)
     kapt(libs.auto.service)
+
+    detektPlugins(libs.detekt.formatting)
 }
 
 publishing {

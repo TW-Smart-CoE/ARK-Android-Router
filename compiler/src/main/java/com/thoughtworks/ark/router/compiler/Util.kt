@@ -1,7 +1,7 @@
 package com.thoughtworks.ark.router.compiler
 
+import java.util.Locale
 import java.io.File.separatorChar as s
-import java.util.*
 
 const val DEFAULT_PACKAGE = "com.thoughtworks.ark.router.module"
 
@@ -18,7 +18,7 @@ internal fun getModuleName(generateDir: String): String {
         val lastIndex = subStr.lastIndexOf(s)
         val result = subStr.substring(lastIndex + 1)
         "Router${result.camelCase()}Module"
-    } catch (e: Exception) {
+    } catch (ignore: Exception) {
         "RouterDefaultModule"
     }
 }

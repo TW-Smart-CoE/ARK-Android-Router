@@ -6,9 +6,16 @@ import com.thoughtworks.ark.router.annotation.Scheme
 import com.thoughtworks.ark.router.annotation.Service
 import com.thoughtworks.ark.router.annotation.ServiceImpl
 import java.io.File
-import javax.annotation.processing.*
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.ProcessingEnvironment
+import javax.annotation.processing.Processor
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.*
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic
@@ -174,14 +181,6 @@ class Compiler : AbstractProcessor() {
                 serviceMap[realKey] = it.toString()
             }
         }
-    }
-
-    private fun String.logn() {
-        processingEnv.messager.printMessage(Diagnostic.Kind.NOTE, this)
-    }
-
-    private fun String.logw() {
-        processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, this)
     }
 
     private fun String.loge() {

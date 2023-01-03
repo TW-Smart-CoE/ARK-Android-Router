@@ -3,20 +3,20 @@
 package com.thoughtworks.ark.router
 
 import android.os.Bundle
+import com.thoughtworks.ark.router.dispatcher.SchemeDispatcher
+import com.thoughtworks.ark.router.dispatcher.ServiceDispatcher
+import com.thoughtworks.ark.router.module.Module
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
-import com.thoughtworks.ark.router.dispatcher.SchemeDispatcher
-import com.thoughtworks.ark.router.dispatcher.ServiceDispatcher
-import com.thoughtworks.ark.router.module.Module
 
 object RouterCore {
-    private val moduleManager by lazy { ModuleManager() }
-    private val interceptorManager by lazy { InterceptorManager() }
-    private val schemeDispatcher by lazy { SchemeDispatcher() }
-    private val serviceDispatcher by lazy { ServiceDispatcher() }
+    private val moduleManager = ModuleManager()
+    private val interceptorManager = InterceptorManager()
+    private val schemeDispatcher = SchemeDispatcher()
+    private val serviceDispatcher = ServiceDispatcher()
 
     fun addModuleName(moduleName: String) {
         try {
@@ -45,7 +45,7 @@ object RouterCore {
     fun dispatchScheme(request: SchemeRequest, interceptorManager: InterceptorManager): Flow<Result<Bundle>> {
         return flowOf(Unit).onEach {
             if (request.enableGlobalInterceptor) {
-                interceptorManager.intercept(request)
+                this.interceptorManager.intercept(request)
             }
         }.onEach {
             interceptorManager.intercept(request)
