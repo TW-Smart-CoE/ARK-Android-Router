@@ -1,11 +1,10 @@
 package com.thoughtworks.ark.router.dispatcher
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import com.thoughtworks.ark.router.Action
 import com.thoughtworks.ark.router.SchemeRequest
 import com.thoughtworks.ark.router.backstack.BackStackEntryManager
@@ -13,7 +12,10 @@ import com.thoughtworks.ark.router.compose.ComposeDispatcher
 import com.thoughtworks.ark.router.compose.SchemeComposable
 import com.thoughtworks.ark.router.group.GroupEntryManager
 import com.thoughtworks.ark.router.internal.InternalHelper
+import com.thoughtworks.ark.router.internal.InternalHelper.findFragmentActivity
 import com.thoughtworks.ark.router.internal.logw
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 class SchemeDispatcher {
     private val dispatcherMaps = LinkedHashMap<Class<*>, InnerDispatcher>()
@@ -36,13 +38,13 @@ class SchemeDispatcher {
         }
     }
 
-    suspend fun dispatch(request: SchemeRequest): Flow<Result<Bundle>> {
+    suspend fun dispatch(context: Context, request: SchemeRequest): Flow<Result<Bundle>> {
         if (request.className.isEmpty()) {
             "Scheme --> dispatch failed! Class not found!".logw()
             return flowOf(Result.failure(IllegalStateException("Scheme class not found!")))
         }
 
-        val fragmentActivity = InternalHelper.fragmentActivity
+        val fragmentActivity = context.findFragmentActivity()
         return if (fragmentActivity == null) {
             findDispatcher(request).dispatch(InternalHelper.context, request)
         } else {

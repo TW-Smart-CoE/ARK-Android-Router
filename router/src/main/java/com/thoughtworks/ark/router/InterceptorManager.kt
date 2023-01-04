@@ -11,14 +11,18 @@ class InterceptorManager {
         interceptorList.remove(interceptor)
     }
 
-    suspend fun intercept(schemeRequest: SchemeRequest) {
-        val temp = mutableListOf<RouterInterceptor>()
-        temp.addAll(interceptorList)
+    suspend fun intercept(schemeRequest: SchemeRequest): SchemeRequest {
+        val tempInterceptorList = mutableListOf<RouterInterceptor>()
+        tempInterceptorList.addAll(interceptorList)
 
-        temp.forEach {
-            if (it.shouldIntercept(schemeRequest)) {
-                it.intercept(schemeRequest)
+        var tempRequest = schemeRequest
+
+        tempInterceptorList.forEach {
+            if (it.shouldIntercept(tempRequest)) {
+                tempRequest = it.intercept(tempRequest)
             }
         }
+
+        return tempRequest
     }
 }

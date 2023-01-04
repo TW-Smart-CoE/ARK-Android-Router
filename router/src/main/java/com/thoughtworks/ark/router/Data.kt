@@ -2,8 +2,8 @@ package com.thoughtworks.ark.router
 
 import android.os.Bundle
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.thoughtworks.ark.router.internal.createRequestId
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SchemeRequest(
@@ -16,7 +16,7 @@ data class SchemeRequest(
     val flags: Int = 0,
     val containerViewId: Int = 0,
 
-    val needResult: Boolean = true,
+    val needResult: Boolean = false,
     val enableBackStack: Boolean = true,
     val enableGlobalInterceptor: Boolean = true,
 

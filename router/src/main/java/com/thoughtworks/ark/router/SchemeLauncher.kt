@@ -1,14 +1,14 @@
 package com.thoughtworks.ark.router
 
+import android.content.Context
 import android.os.Bundle
-import androidx.lifecycle.lifecycleScope
+import com.thoughtworks.ark.router.internal.InternalHelper.findScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
-import com.thoughtworks.ark.router.internal.InternalHelper
-import com.thoughtworks.ark.router.internal.logw
 
 class SchemeLauncher(
+    val context: Context,
     val schemeRequest: SchemeRequest,
     val interceptorManager: InterceptorManager
 ) {
@@ -19,11 +19,7 @@ class SchemeLauncher(
     }
 
     fun launch() {
-        val activity = InternalHelper.fragmentActivity
-        if (activity == null) {
-            "No valid Activity found!".logw()
-            return
-        }
-        RouterCore.dispatchScheme(schemeRequest, interceptorManager).launchIn(activity.lifecycleScope)
+        RouterCore.dispatchScheme(context, schemeRequest, interceptorManager)
+            .launchIn(context.findScope())
     }
 }

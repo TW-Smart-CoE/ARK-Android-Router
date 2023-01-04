@@ -1,13 +1,13 @@
 package com.thoughtworks.ark.router
 
+import android.content.Context
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import androidx.lifecycle.Lifecycle
-import kotlinx.coroutines.CoroutineScope
+import com.thoughtworks.ark.router.internal.InternalHelper.findActivity
+import com.thoughtworks.ark.router.internal.InternalHelper.findScope
+import com.thoughtworks.ark.router.internal.key
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import com.thoughtworks.ark.router.internal.InternalHelper
-import com.thoughtworks.ark.router.internal.key
 
 @OptIn(FlowPreview::class)
 class SchemeHandler(
@@ -37,7 +37,7 @@ class SchemeHandler(
         return apply { interceptorManager.addInterceptor(interceptor) }
     }
 
-    fun addInterceptor(interceptor: suspend (SchemeRequest) -> Unit): SchemeHandler {
+    fun addInterceptor(interceptor: suspend (SchemeRequest) -> SchemeRequest): SchemeHandler {
         return apply {
             interceptorManager.addInterceptor(DefaultRouterInterceptor(interceptor))
         }
@@ -81,9 +81,9 @@ class SchemeHandler(
         return configRequest { copy(exitAnim = exitAnim) }
     }
 
-    fun flow(): Flow<Unit> {
+    fun flow(context: Context): Flow<Unit> {
         val handler = configRequest { copy(needResult = false) }
-        return RouterCore.dispatchScheme(handler.request, handler.interceptorManager)
+        return RouterCore.dispatchScheme(context, handler.request, handler.interceptorManager)
             .flatMapConcat {
                 if (it.isSuccess) {
                     flowOf(Unit)
@@ -93,43 +93,46 @@ class SchemeHandler(
             }
     }
 
-    fun resultFlow(): Flow<Result<Bundle>> {
+    fun resultFlow(context: Context): Flow<Result<Bundle>> {
         val handler = configRequest { copy(needResult = true) }
-        return RouterCore.dispatchScheme(handler.request, handler.interceptorManager)
+        return RouterCore.dispatchScheme(context, handler.request, handler.interceptorManager)
     }
 
     fun route(
-        scope: CoroutineScope = InternalHelper.scope,
+        context: Context,
         onError: (Throwable) -> Unit = {},
+        onSuccess: () -> Unit = {},
         onResult: (Bundle) -> Unit = EMPTY_LAMBDA
     ) {
         if (onResult == EMPTY_LAMBDA) {
-            flow().catch { onError(it) }.launchIn(scope)
+            flow(context).catch { onError(it) }
+                .onCompletion { onSuccess() }
+                .launchIn(context.findScope())
         } else {
-            resultFlow().onEach {
-                if (it.isSuccess) {
-                    onResult(it.getOrDefault(Bundle()))
-                } else {
-                    onError(it.exceptionOrNull() ?: Throwable())
+            resultFlow(context)
+                .onEach {
+                    if (it.isSuccess) {
+                        onResult(it.getOrDefault(Bundle()))
+                    } else {
+                        onError(it.exceptionOrNull() ?: Throwable())
+                    }
                 }
-            }.launchIn(scope)
+                .catch { onError(it) }
+                .onCompletion { onSuccess() }
+                .launchIn(context.findScope())
         }
     }
 
-    fun getLauncher(): SchemeLauncher {
+    fun getLauncher(context: Context): SchemeLauncher {
         val schemeHandler = configRequest { copy(needResult = true) }
 
-        val activity = InternalHelper.fragmentActivity
-            ?: throw IllegalStateException("No FragmentActivity founded!")
-
-        if (activity.lifecycle.currentState != Lifecycle.State.INITIALIZED) {
-            throw IllegalStateException("You must call getLauncher() after activity are created.")
-        }
+        val activity = context.findActivity()
+            ?: throw IllegalStateException("No Activity founded!")
 
         val key = activity.key()
         var launcher = SchemeLauncherManager.getLauncher(key, request.scheme)
         if (launcher == null) {
-            launcher = SchemeLauncher(schemeHandler.request, schemeHandler.interceptorManager)
+            launcher = SchemeLauncher(context, schemeHandler.request, schemeHandler.interceptorManager)
             SchemeLauncherManager.addLauncher(key, launcher)
         }
 

@@ -2,6 +2,7 @@
 
 package com.thoughtworks.ark.router
 
+import android.content.Context
 import android.os.Bundle
 import com.thoughtworks.ark.router.dispatcher.SchemeDispatcher
 import com.thoughtworks.ark.router.dispatcher.ServiceDispatcher
@@ -10,7 +11,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
 
 object RouterCore {
     private val moduleManager = ModuleManager()
@@ -42,16 +43,25 @@ object RouterCore {
 
     fun queryService(identity: String): ServiceRequest = moduleManager.queryService(identity)
 
-    fun dispatchScheme(request: SchemeRequest, interceptorManager: InterceptorManager): Flow<Result<Bundle>> {
-        return flowOf(Unit).onEach {
-            if (request.enableGlobalInterceptor) {
-                this.interceptorManager.intercept(request)
+    fun dispatchScheme(
+        context: Context,
+        request: SchemeRequest,
+        interceptorManager: InterceptorManager
+    ): Flow<Result<Bundle>> {
+        return flowOf(request)
+            .map {
+                if (it.enableGlobalInterceptor) {
+                    this.interceptorManager.intercept(it)
+                } else {
+                    it
+                }
             }
-        }.onEach {
-            interceptorManager.intercept(request)
-        }.flatMapConcat {
-            schemeDispatcher.dispatch(request)
-        }
+            .map {
+                interceptorManager.intercept(it)
+            }
+            .flatMapConcat {
+                schemeDispatcher.dispatch(context, it)
+            }
     }
 
     fun dispatchBack(bundle: Bundle): SchemeRequest? {
