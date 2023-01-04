@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kapt)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.router)
 }
 
 android {
@@ -56,8 +57,11 @@ dependencies {
     implementation(libs.bundles.android)
     implementation(libs.bundles.compose)
 
-    implementation(project(":router"))
-    kapt(project(":compiler"))
+//    implementation(project(":router"))
+//    kapt(project(":compiler"))
+
+    implementation(libs.router)
+    kapt(libs.router.compiler)
 
     testImplementation(libs.junit4)
 

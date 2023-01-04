@@ -8,8 +8,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kapt) apply false
-    alias(libs.plugins.hilt) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.router) apply false
 }
 
 apply(from = "config/jacoco/project.kts")

@@ -1,4 +1,12 @@
 pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.toString() == "com.thoughtworks.ark.router") {
+                useModule("com.github.TW-Smart-CoE.ARK-Android-Router:com.thoughtworks.ark.router:${requested.version}")
+            }
+        }
+    }
+
     repositories {
         gradlePluginPortal()
         google()

@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Router
+-keep public class com.thoughtworks.ark.router.module.**
+-keep public class com.thoughtworks.ark.router.annotation.**
+-keep public class com.thoughtworks.ark.router.RouterCore {*;}
+-keep public class * extends com.thoughtworks.ark.router.Action
+-keep @com.thoughtworks.ark.router.annotation.Scheme class * {*;}
+-keep @com.thoughtworks.ark.router.annotation.Service class * {*;}
+-keep @com.thoughtworks.ark.router.annotation.ServiceImpl class * {*;}
+
