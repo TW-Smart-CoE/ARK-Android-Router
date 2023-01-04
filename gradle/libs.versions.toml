@@ -43,7 +43,7 @@ espresso-core = "3.5.0"
 router = "42b1bcd3de"
 
 # other
-auto-service = "1.0"
+auto-service = "1.0.1"
 kotlin-poet = "1.10.2"
 clarity = "1.0.5"
 
