@@ -27,9 +27,9 @@ internal fun FragmentActivity.showNewFragment(request: SchemeRequest): Fragment 
     with(supportFragmentManager.beginTransaction()) {
         setCustomAnimations(request.enterAnim, request.exitAnim, 0, 0)
         if (request.useReplace) {
-            replace(request.containerId(), fragment, request.uniqueId)
+            replace(request.containerId(), fragment, request.uniqueTag)
         } else {
-            add(request.containerId(), fragment, request.uniqueId)
+            add(request.containerId(), fragment, request.uniqueTag)
         }
 
         commitAllowingStateLoss()
@@ -47,16 +47,16 @@ internal fun FragmentActivity.createDialogFragment(request: SchemeRequest): Dial
 
 internal fun FragmentActivity.showDialogFragment(request: SchemeRequest): DialogFragment {
     val dialogFragment = createDialogFragment(request)
-    dialogFragment.show(supportFragmentManager, request.uniqueId)
+    dialogFragment.show(supportFragmentManager, request.uniqueTag)
     return dialogFragment
 }
 
 internal fun FragmentActivity.findFragment(request: SchemeRequest): Fragment? {
-    return supportFragmentManager.findFragmentByTag(request.uniqueId)
+    return supportFragmentManager.findFragmentByTag(request.uniqueTag)
 }
 
 internal fun FragmentActivity.findDialogFragment(request: SchemeRequest): DialogFragment? {
-    return supportFragmentManager.findFragmentByTag(request.uniqueId) as? DialogFragment
+    return supportFragmentManager.findFragmentByTag(request.uniqueTag) as? DialogFragment
 }
 
 internal fun FragmentActivity.addFragment(fragment: Fragment) {

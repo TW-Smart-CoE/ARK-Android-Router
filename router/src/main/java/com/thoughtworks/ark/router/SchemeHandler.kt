@@ -49,6 +49,10 @@ class SchemeHandler(
         }
     }
 
+    fun tag(uniqueTag: String): SchemeHandler {
+        return configRequest { copy(uniqueTag = uniqueTag) }
+    }
+
     fun group(groupName: String = DEFAULT_GROUP): SchemeHandler {
         return configRequest { copy(groupId = groupName) }
     }

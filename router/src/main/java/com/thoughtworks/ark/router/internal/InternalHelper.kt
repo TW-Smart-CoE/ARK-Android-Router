@@ -22,9 +22,6 @@ object InternalHelper {
     internal val application: Application
         get() = ClarityPotion.application
 
-    internal val context: Context
-        get() = activity ?: ClarityPotion.context
-
     internal val activity: Activity?
         get() = ClarityPotion.activity
 

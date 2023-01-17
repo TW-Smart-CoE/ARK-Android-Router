@@ -46,7 +46,7 @@ class SchemeDispatcher {
 
         val fragmentActivity = context.findFragmentActivity()
         return if (fragmentActivity == null) {
-            findDispatcher(request).dispatch(InternalHelper.context, request)
+            findDispatcher(request).dispatch(context, request)
         } else {
             findDispatcher(request).dispatch(fragmentActivity, request)
         }

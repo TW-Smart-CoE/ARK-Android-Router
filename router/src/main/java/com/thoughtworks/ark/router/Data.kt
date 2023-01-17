@@ -2,7 +2,7 @@ package com.thoughtworks.ark.router
 
 import android.os.Bundle
 import android.os.Parcelable
-import com.thoughtworks.ark.router.internal.createRequestId
+import com.thoughtworks.ark.router.internal.createUniqueTag
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -26,7 +26,7 @@ data class SchemeRequest(
     val useReplace: Boolean = false,
 
     val groupId: String = "",
-    val uniqueId: String = createRequestId()
+    val uniqueTag: String = createUniqueTag()
 ) : Parcelable
 
 data class ServiceRequest(
