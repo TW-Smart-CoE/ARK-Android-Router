@@ -13,7 +13,7 @@ dependencies {
     implementation("com.android.tools.build:gradle-api:7.0.4")
 }
 
-group = "com.thoughtworks.ark.router"
+group = "io.github.ssseasonnn.router"
 version = "1.0.0"
 
 tasks.withType(Copy::class.java).all {
@@ -23,12 +23,18 @@ tasks.withType(Copy::class.java).all {
 gradlePlugin {
     plugins {
         create("routerPlugin") {
-            id = "com.thoughtworks.ark.router"
-            displayName = "Router plugin"
-            description = "Router plugin"
+            id = "io.github.ssseasonnn.router"
+            displayName = "Router Plugin"
+            description = "An Android navigation framework plugin, to help user auto register RouterTable."
             implementationClass = "com.thoughtworks.ark.router.plugin.RouterPlugin"
         }
     }
+}
+
+pluginBundle {
+    website = "https://github.com/TW-Smart-CoE/ARK-Android-Router"
+    vcsUrl = "https://github.com/TW-Smart-CoE/ARK-Android-Router.git"
+    tags = listOf("Router")
 }
 
 publishing {
