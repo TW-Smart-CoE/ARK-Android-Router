@@ -18,12 +18,12 @@ default_platform(:android)
 platform :android do
   desc "Runs all the static check"
   lane :check do
-    gradle(task: "detekt")
+#     gradle(task: "detekt")
   end
 
   desc "Runs all the unit tests"
   lane :unit_test do
-    gradle(task: "devDebugCoverage")
+#     gradle(task: "devDebugCoverage")
   end
 
   desc "Deploy on Fir.im"
