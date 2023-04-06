@@ -44,7 +44,7 @@ router = "42b1bcd3de"
 
 # other
 auto-service = "1.0"
-kotlin-poet = "1.10.2"
+kotlin-poet = "1.13.0"
 clarity = "1.0.5"
 
 [libraries]
