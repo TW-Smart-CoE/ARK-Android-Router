@@ -45,7 +45,7 @@ router = "42b1bcd3de"
 # other
 auto-service = "1.0"
 kotlin-poet = "1.10.2"
-clarity = "1.0.5"
+clarity = "1.0.6"
 
 [libraries]
 # plugin
