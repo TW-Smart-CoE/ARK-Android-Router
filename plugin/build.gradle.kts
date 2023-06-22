@@ -10,7 +10,7 @@ dependencies {
     implementation(gradleApi())
     implementation(localGroovy())
     implementation("com.android.tools.build:gradle:7.0.4")
-    implementation("com.android.tools.build:gradle-api:7.0.4")
+    implementation("com.android.tools.build:gradle-api:7.4.2")
 }
 
 group = "io.github.ssseasonnn.router"
